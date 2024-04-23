@@ -1,0 +1,19 @@
+1707101976570	geckodriver	INFO	Listening on 127.0.0.1:53955
+1707101977390	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/fd/q4cyx0y964ng15gx29mtjnnw0000gn/T/rust_mozprofileifcari"
+1707102034478	geckodriver	INFO	Listening on 127.0.0.1:53988
+1707102035346	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/fd/q4cyx0y964ng15gx29mtjnnw0000gn/T/rust_mozprofileS4hlbw"
+1707102154822	geckodriver	INFO	Listening on 127.0.0.1:55533
+1707102155841	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... "--marionette" "-foreground" "-no-remote" "-profile" "/var/folders/fd/q4cyx0y964ng15gx29mtjnnw0000gn/T/rust_mozprofilei1PH6Y"
+1707102271254	geckodriver	INFO	Listening on 127.0.0.1:57722
+1707102272279	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... " "--headless" "-foreground" "-no-remote" "-profile" "/var/folders/fd/q4cyx0y964ng15gx29mtjnnw0000gn/T/rust_mozprofileyUV8r1"
+1707102501289	geckodriver	INFO	Listening on 127.0.0.1:62362
+1707102502312	mozrunner::runner	INFO	Running command: MOZ_CRASHREPORTER="1" MOZ_CRASHREPORTER_NO_REPORT="1" MOZ_CRASHREPORTER_SHUTDOWN="1" MOZ_NO_REMOTE="1" "/App ... "--no-sandbox" "-foreground" "-no-remote" "-profile" "/var/folders/fd/q4cyx0y964ng15gx29mtjnnw0000gn/T/rust_mozprofilezkvOMT"
+1707102945780	geckodriver	INFO	Listening on 127.0.0.1:57334
+1707102987537	geckodriver	INFO	Listening on 127.0.0.1:58347
+1707103239550	geckodriver	INFO	Listening on 127.0.0.1:59284
+1707103386193	geckodriver	INFO	Listening on 127.0.0.1:59414
+1707103459598	geckodriver	INFO	Listening on 127.0.0.1:59553
+1707103730085	geckodriver	INFO	Listening on 127.0.0.1:59752
+1707104369942	geckodriver	INFO	Listening on 127.0.0.1:59987
+1707105133846	geckodriver	INFO	Listening on 127.0.0.1:60337
+1707105832919	geckodriver	INFO	Listening on 127.0.0.1:60735
