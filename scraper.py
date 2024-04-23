@@ -28,21 +28,16 @@ parser.add_argument('FileName', metavar='filename', type=str, help='the name of 
 # Parse the arguments
 args = parser.parse_args()
 
-# File path to the list of creators we want to scrape
+# File path to the list of users we want to scrape
 file_name = args.FileName
 print(file_name)
-parse = file_name.split("_")
-brand = parse[1][:-5] # remove .xlsx
-print('Brand:', brand)
+parse = file_name
 print('File Name:', file_name)
 
 #Path to your excel sheets
-creators = pd.read_excel("/Users/justinsong/hyp/scraper/meta/" + file_name)
+users = pd.read_excel("/Users/justinsong/hyp/scraper/meta/" + file_name)
 
 data = []
-# Path to geckodriver if you didn't install gecko to the C:/Windows (for Windows user)!
-# PATH = r"/Users/guolingjun/Desktop/HYP/geckodriver"
-# driver = webdriver.Firefox(executable_path = PATH)
 driver = webdriver.Firefox()
 
 driver.get("https://www.instagram.com/")
@@ -74,10 +69,10 @@ notnow2 = driver.find_element(By.XPATH, "//button[contains(text(), 'Not Now')]")
 time.sleep(5)
 brokenLinks = []
 
-# Iterating through the list of creators 
-for index, creator in creators.iterrows():
-    influencer_data = {
-        "ig_username": [creator["Link to IG"]],
+# Iterating through the list of users 
+for index, user in users.iterrows():
+    user_data = {
+        "ig_username": [user["Link to IG"]],
         "name": [],
         "title": [],
         "bio": [],
@@ -85,12 +80,11 @@ for index, creator in creators.iterrows():
         "posts": {},
     }
     
-    # Load the profile of a creator
-    #print("-----", influencer_data["ig_username"][0])
-    driver.get(influencer_data["ig_username"][0])
+    # Load the profile of a user
+    driver.get(user_data["ig_username"][0])
     time.sleep(random.randint(5, 10))
 
-    # Get the profile information of the creator
+    # Get the profile information of the user
     try:
         profileDescription = driver.find_element(By.XPATH, '//meta[@name="description"]').get_attribute('content')
 
@@ -104,48 +98,48 @@ for index, creator in creators.iterrows():
         following_match = re.search(following_pattern, profileDescription)
         posts_match = re.search(posts_pattern, profileDescription)
 
-        influencer_data["ig_username"].append(followers_match.group()) 
-        influencer_data["ig_username"].append(following_match.group())
-        influencer_data["ig_username"].append(posts_match.group())
+        user_data["ig_username"].append(followers_match.group()) 
+        user_data["ig_username"].append(following_match.group())
+        user_data["ig_username"].append(posts_match.group())
         
         og_title = driver.find_element(By.XPATH, '//meta[@property="og:title"]').get_attribute('content')
         match = re.match(r"(.*) \(@(.*)\) • Instagram photos and videos", og_title)
         if match:
             display_name = match.group(1)
 
-        # Add the extracted information to your influencer_data dictionary
-        influencer_data["name"].append(display_name.split(" | ")[0])
-        influencer_data["title"].append(display_name)
+        # Add the extracted information to your user_data dictionary
+        user_data["name"].append(display_name.split(" | ")[0])
+        user_data["title"].append(display_name)
         
         
         bio_element = driver.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/div[2]/section/main/div/header/section/div[3]/h1")
         bio_text = bio_element.get_attribute('innerHTML')  # Extracts plain text content
         clean = re.compile('<.*?>')
         bio = re.sub(clean, '', bio_text)
-        influencer_data["bio"].append(bio)
+        user_data["bio"].append(bio)
         
         
         #scroll
     except Exception as e:
-        print("cannot find profile", influencer_data["ig_username"][0])
-        brokenLinks.append(influencer_data["ig_username"][0])
+        print("cannot find profile", user_data["ig_username"][0])
+        brokenLinks.append(user_data["ig_username"][0])
         pass 
     
     try:
         linktree_element = driver.find_element(By.XPATH, "//span[contains(text(), 'linktr.ee')]")
         linktree_url = linktree_element.text
-        influencer_data["linktree"].append(linktree_url)
+        user_data["linktree"].append(linktree_url)
     except Exception as e:
     # If the linktr.ee element is not found, append 'na' to the list
-        influencer_data["linktree"].append('na')
+        user_data["linktree"].append('na')
         pass
 
-    # Scroll through the profile of a creator
+    # Scroll through the profile of a user
     scrolldown = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var scrolldown=document.body.scrollHeight;return scrolldown;")
     match=False
     posts = set()
 
-    # Go through the posts of the creator so we can scrape from them
+    # Go through the posts of the user so we can scrape from them
     try:
         postContainer = driver.find_element(By.XPATH, "/html/body/div[2]/div/div/div[2]/div/div/div[1]/div[1]/div[2]/div[2]/section/main/div/div[3]")
         child_divs = postContainer.find_elements(By.TAG_NAME, "div")
@@ -162,7 +156,7 @@ for index, creator in creators.iterrows():
                         )
 
         for post in posts:
-            influencer_data["posts"][post] = []
+            user_data["posts"][post] = []
 
         while(match==False):
 
@@ -173,7 +167,7 @@ for index, creator in creators.iterrows():
         
                 # Try finding the description (contains likes and comments sometimes hidden)
                 try:
-                    if len(influencer_data["posts"][post_link]) == 4:
+                    if len(user_data["posts"][post_link]) == 4:
                         continue
 
                     description = driver.find_element(By.XPATH, '//meta[@name="description"]').get_attribute('content')
@@ -185,11 +179,11 @@ for index, creator in creators.iterrows():
                     comments_match = re.search(comments_pattern, description)
 
                     if (likes_match == None or comments_match == None):
-                        influencer_data["posts"][post_link].append(("likes: ", "likes are hidden"))
-                        influencer_data["posts"][post_link].append(("comments: ", "comments are hidden"))
+                        user_data["posts"][post_link].append(("likes: ", "likes are hidden"))
+                        user_data["posts"][post_link].append(("comments: ", "comments are hidden"))
                     else:
-                        influencer_data["posts"][post_link].append(("likes: ", likes_match.group()))
-                        influencer_data["posts"][post_link].append(("comments: ", comments_match.group()))
+                        user_data["posts"][post_link].append(("likes: ", likes_match.group()))
+                        user_data["posts"][post_link].append(("comments: ", comments_match.group()))
                 except Exception as e:
                     print("description hidden", post_link)
                     brokenLinks.append(post_link)
@@ -205,7 +199,7 @@ for index, creator in creators.iterrows():
                     for element in span_elements:
                         comments.append(element.text.strip())  # Use strip() to remove any leading/trailing whitespace
                     
-                    influencer_data["posts"][post_link].append(("comment: ", comments))
+                    user_data["posts"][post_link].append(("comment: ", comments))
                 except Exception as e:
                     print(f"No comments")
                     pass
@@ -222,8 +216,8 @@ for index, creator in creators.iterrows():
                         caption_element == ""
                     
                     caption, hashtags = separate_caption_from_hashtags(caption_element)
-                    influencer_data["posts"][post_link].append(("caption: ", caption))
-                    influencer_data["posts"][post_link].append(("hashtags: ", hashtags))
+                    user_data["posts"][post_link].append(("caption: ", caption))
+                    user_data["posts"][post_link].append(("hashtags: ", hashtags))
                 except Exception as e:
                     print("caption hidden", post_link)
                     pass
@@ -233,7 +227,7 @@ for index, creator in creators.iterrows():
                     print(1)
                     date = date_tag.get_attribute('title')
                     print(2)
-                    influencer_data["posts"][post_link].append(("date: ", date))
+                    user_data["posts"][post_link].append(("date: ", date))
                 except Exception as e:
                     print("Not able to get date")
 
@@ -247,14 +241,14 @@ for index, creator in creators.iterrows():
                 match=True
     
 
-        print("+++++++able to append", influencer_data)
-        data.append(influencer_data)
+        print("+++++++able to append", user_data)
+        data.append(user_data)
 
         #searchbox
         # print(posts)
         # print(len(posts))
     except Exception as e:
-        print("no scrolling here ------- ", influencer_data)
+        print("no scrolling here ------- ", user_data)
         print(e)
 
 
